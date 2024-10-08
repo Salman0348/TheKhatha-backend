@@ -25,10 +25,14 @@ require("dotenv").config();
 
 const app = express();
 const corsOptions = {
-  origin: process.env.CORS_ALLOWED_ORIGINS.split(","),
-  credentials: process.env.CORS_CREDENTIALS === "true", //access-control-allow-credentials
+  origin:
+    process.env.NODE_ENV === "production"
+      ? false // Disable CORS in production, allowing same-origin requests
+      : process.env.CORS_ALLOWED_ORIGINS.split(","), // Allow specific origins in development
+  credentials: process.env.CORS_CREDENTIALS === "true", // Access-Control-Allow-Credentials
   optionSuccessStatus: 200,
 };
+
 app.use(cors(corsOptions));
 app.use(bodyParser.json());
 app.use(cookieParser());
