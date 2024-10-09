@@ -27,7 +27,7 @@ const app = express();
 const corsOptions = {
   origin:
     process.env.NODE_ENV === "production"
-      ? false // Disable CORS in production, allowing same-origin requests
+      ? process.env.FRONTEND_URL
       : process.env.CORS_ALLOWED_ORIGINS.split(","), // Allow specific origins in development
   credentials: process.env.CORS_CREDENTIALS === "true", // Access-Control-Allow-Credentials
   optionSuccessStatus: 200,
