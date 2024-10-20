@@ -18,18 +18,17 @@ const nodemailerSendVerificationEmail = async (email, verificationToken) => {
       from: `TheKhatha <${process.env.EMAIL}>`,
       to: email,
       subject: "Email Verification",
-      text: "Hey how are you?",
-      // html: `
-      //   <p>Dear user,</p>
-      //   <p>Welcome to TheKhatha! Please verify your email by clicking the button below to complete your account creation:</p>
-      //   <a href="${process.env.FRONTEND_URL}/verify-email?token=${verificationToken}"
-      //      style="display: inline-block; padding: 10px 20px; font-size: 16px; color: white; background-color: #4CAF50; text-decoration: none; border-radius: 5px;">
-      //      Verify Email
-      //   </a>
-      //   <p style="color: red">If you did not request this, please ignore this email.</p>
-      //   <p style="font-size: 12px; color: #888;">This email was sent to you as part of the Khatha account creation process.</p>
-      //   <p style="font-size: 12px; color: #888;">Thank you for choosing TheKhatha!</p>
-      // `,
+      html: `
+        <p>Dear user,</p>
+        <p>Welcome to TheKhatha! Please verify your email by clicking the button below to complete your account creation:</p>
+        <a href="${process.env.FRONTEND_URL}/verify-email?token=${verificationToken}" 
+           style="display: inline-block; padding: 10px 20px; font-size: 16px; color: white; background-color: #4CAF50; text-decoration: none; border-radius: 5px;">
+           Verify Email
+        </a>
+        <p style="color: red">If you did not request this, please ignore this email.</p>
+        <p style="font-size: 12px; color: #888;">This email was sent to you as part of the Khatha account creation process.</p>
+        <p style="font-size: 12px; color: #888;">Thank you for choosing TheKhatha!</p>
+      `,
     };
 
     await transporter.sendMail(mailOptions);
