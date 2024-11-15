@@ -24,7 +24,7 @@ const getGroupMembers = async (req, res) => {
                 'member_amount_owed', m.amount_owed,
                 'member_last_entry_purpose', e.purpose,
                 'member_last_entry_amount', e.amount,
-                'member_last_entry_time', e.created_at,
+                'member_last_entry_time',DATE_FORMAT(e.created_at, '%Y-%m-%dT%H:%i:%sZ'),
                 'member_last_entry_description', e.description
             )
             SEPARATOR ','

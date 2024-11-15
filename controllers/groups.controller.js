@@ -18,7 +18,7 @@ const groupsFetchController = async (req, res) => {
         u.id AS last_entry_user_id,
         le.amount AS last_entry_amount,
         le.purpose AS last_entry_purpose,
-        le.created_at AS last_entry_date
+        DATE_FORMAT(le.created_at, '%Y-%m-%dT%H:%i:%sZ') AS last_entry_date
     FROM
         \`group\` g
     JOIN
