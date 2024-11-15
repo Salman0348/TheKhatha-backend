@@ -17,8 +17,8 @@ const getGroupEntries = async (req, res) => {
         e.amount AS entry_amount,
         e.purpose AS entry_purpose,
         e.description AS entry_description,
-        DATE_FORMAT(e.created_at, '%d/%m/%Y %h:%i %p') AS entry_date,
-        DATE_FORMAT(e.updated_at, '%d/%m/%Y %h:%i %p') AS entry_updated_date,
+        e.created_at AS entry_date,
+        e.updated_at AS entry_updated_date,
         m.user_id,
         u.username AS entry_person,
         GROUP_CONCAT(ep.member_id) AS participant_member_ids
