@@ -1,6 +1,8 @@
 const { isSubset, hasDuplicates } = require("../utils/arrayOperations.util");
 const { dbQuery } = require("../utils/db");
 const isNumeric = require("../utils/isNumeric.util");
+const { getCategory } = require("../services/aiServices");
+
 const addNewEntry = async (req, res) => {
   const {
     submittingMemberId,
@@ -101,7 +103,7 @@ const addNewEntry = async (req, res) => {
       });
     }
     const selectedGroupMemberIds = selectedGroupMembers.map(
-      (member) => member.member_id
+      (member) => member.member_id,
     );
 
     let participantsMemberIds = selectedGroupMemberIds; //Default: all members will be participants
@@ -115,17 +117,33 @@ const addNewEntry = async (req, res) => {
       });
     }
 
+    // ******************************** AI Service Integration ********************************
+    const purposeAndDescription = [entryPurposeTrimmed, entryDescriptionTrimmed]
+      .filter(Boolean)
+      .join(" "); // Combine purpose and description, filtering out null/undefined values
+
+    let category = null;
+    if (purposeAndDescription.length > 0) {
+      try {
+        const aiResponse = await getCategory(purposeAndDescription);
+        category = aiResponse?.data?.category;
+      } catch (error) {
+        console.error("Error fetching category from AI service:", error);
+        category = null; // Fallback to null if AI service fails
+      }
+    }
     await dbQuery("START TRANSACTION");
     transactionStarted = true;
 
     // Insert the new entry into the 'entry' table
     const sqlInsertQuery =
-      "INSERT INTO entry (amount, purpose, description, member_id) VALUES (?, ?, ?, ?)";
+      "INSERT INTO entry (amount, purpose, description, member_id, category) VALUES (?, ?, ?, ?, ?)";
     const entryResults = await dbQuery(sqlInsertQuery, [
       entryAmount,
       entryPurposeTrimmed,
       entryDescriptionTrimmed,
       submittingMemberId,
+      category,
     ]);
 
     const entryId = entryResults.insertId;
@@ -145,7 +163,7 @@ const addNewEntry = async (req, res) => {
     participantsMemberIds.forEach((participantMemberId) => {
       // Insert each participant into the entry_participant table
       queries.push(
-        dbQuery(participantsInsertQuery, [participantMemberId, entryId])
+        dbQuery(participantsInsertQuery, [participantMemberId, entryId]),
       );
 
       // Update the amount owed by each participant
@@ -160,7 +178,7 @@ const addNewEntry = async (req, res) => {
 
       // Push the update query into the array of promises
       queries.push(
-        dbQuery(updateOwedAmountQuery, [updatedAmount, participantMemberId])
+        dbQuery(updateOwedAmountQuery, [updatedAmount, participantMemberId]),
       );
     });
 

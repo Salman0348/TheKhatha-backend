@@ -7,6 +7,7 @@ const { db } = require("../utils/db");
 const authinticateToken = async (req, res, next) => {
   const accessToken = req.cookies.accessToken;
   const refreshToken = req.cookies.refreshToken;
+
   if (!(accessToken && refreshToken)) {
     return res.status(401).json({
       error: "UNAUTHORIZED",
@@ -56,7 +57,7 @@ const authinticateToken = async (req, res, next) => {
                       userPicCloudinayUrl: dbUser.avatar_url || null,
                     },
                     process.env.JWT_ACCESS_TOKEN_SECRET_KEY,
-                    { expiresIn: "15m" }
+                    { expiresIn: "15m" },
                   );
                   res.cookie("accessToken", newAccessToken, {
                     httpOnly: true,
@@ -71,9 +72,9 @@ const authinticateToken = async (req, res, next) => {
                     userPicCloudinayUrl: dbUser.avatar_url || null,
                   };
                   next();
-                }
+                },
               );
-            }
+            },
           );
         } else {
           return res.status(403).json({
@@ -85,7 +86,7 @@ const authinticateToken = async (req, res, next) => {
         req.user = user;
         next();
       }
-    }
+    },
   );
 };
 

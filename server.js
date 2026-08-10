@@ -21,6 +21,19 @@ const verifyEmail = require("./controllers/verifyEmail.controller.js");
 const resendVerificationEmail = require("./controllers/resendVerificationEmail.controller.js");
 const updateGroup = require("./controllers/updateGroup.controller.js");
 const deleteGroup = require("./controllers/deleteGroup.controller.js");
+const minimizeDebtController = require("./controllers/minimizeDebt.controller");
+const getExpenseForecastController = require("./controllers/getExpenseForecast.controller.js");
+const getExpenseAnalyticsController = require("./controllers/expenseAnalytics.controller.js");
+const editBudgetController = require("./controllers/editBudget.controller.js");
+const getGroupInfoController = require("./controllers/getGroupInfo.controllers.js");
+const getFinancialAdvisorController = require("./controllers/financialAdvisor.controller.js");
+const {
+  getAccountController,
+  createAccountController,
+  updateAccountController,
+  deleteAccountController,
+} = require("./controllers/account.controller.js");
+
 require("dotenv").config();
 
 const app = express();
@@ -61,7 +74,7 @@ app.post(
   authinticateToken,
   upload.single("groupImage"),
   handleUpload,
-  createGroup
+  createGroup,
 );
 
 //groups
@@ -82,7 +95,7 @@ app.post(
   upload.single("newUserImg"),
   handleUpload,
   removeCloudinaryImage,
-  updateProfile
+  updateProfile,
 );
 
 //update-group
@@ -92,10 +105,48 @@ app.post(
   upload.single("imageFile"),
   handleUpload,
   removeCloudinaryImage,
-  updateGroup
+  updateGroup,
 );
 
 app.delete("/api/v1/delete-group/:id", authinticateToken, deleteGroup);
+
+// minimize-debt
+app.get("/api/v1/minimize-debt", authinticateToken, minimizeDebtController);
+
+// get-expense-forecast
+app.get(
+  "/api/v1/expense-forecast",
+  authinticateToken,
+  getExpenseForecastController,
+);
+
+// expense-analytics
+app.get(
+  "/api/v1/expense-analytics",
+  authinticateToken,
+  getExpenseAnalyticsController,
+);
+
+// edit budget
+app.patch("/api/v1/edit-budget", authinticateToken, editBudgetController);
+
+// get group info (contains budget and accounts detail of selected group members)
+app.get("/api/v1/group-info", authinticateToken, getGroupInfoController);
+
+// get financial advise(recommendations)
+app.get(
+  "/api/v1/financial-advisor",
+  authinticateToken,
+  getFinancialAdvisorController,
+);
+
+// account routes
+app.get("/api/v1/account", authinticateToken, getAccountController);
+app.post("/api/v1/account", authinticateToken, createAccountController);
+app.put("/api/v1/account", authinticateToken, updateAccountController);
+app.delete("/api/v1/account", authinticateToken, deleteAccountController);
+
+// *************************************************************************** //
 
 // Error handling middleware
 app.use(errorHandldingMiddleware);

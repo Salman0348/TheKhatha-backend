@@ -34,7 +34,7 @@ const signup = async (req, res) => {
     // Check if user already exists in pending_user table
     const pendingUser = await dbQuery(
       "SELECT * FROM pending_user WHERE email = ?",
-      [email]
+      [email],
     );
     if (pendingUser.length > 0) {
       //if the user is already a pending user(pu) no need for creating another pu with the same email: so the code below this if won't be executed
@@ -43,20 +43,20 @@ const signup = async (req, res) => {
       try {
         jwt.verify(
           oldVerificationToken,
-          process.env.JWT_VERIFICATION_TOKEN_SECRET_KEY
+          process.env.JWT_VERIFICATION_TOKEN_SECRET_KEY,
         );
       } catch (error) {
         if (error.name === "TokenExpiredError") {
           const verificationToken = jwt.sign(
             { email },
             process.env.JWT_VERIFICATION_TOKEN_SECRET_KEY,
-            { expiresIn: "1d" }
+            { expiresIn: "1d" },
           );
 
           // Update the verification token in the database
           await dbQuery(
             "UPDATE pending_user SET verification_token = ? WHERE email = ?",
-            [verificationToken, email]
+            [verificationToken, email],
           );
         } else {
           return res
@@ -75,7 +75,7 @@ const signup = async (req, res) => {
     const verificationToken = jwt.sign(
       { email },
       process.env.JWT_VERIFICATION_TOKEN_SECRET_KEY,
-      { expiresIn: "1d" }
+      { expiresIn: "1d" },
     );
 
     // Hash password
@@ -84,7 +84,7 @@ const signup = async (req, res) => {
     // Store user data in the pending_users table
     await dbQuery(
       "INSERT INTO pending_user (username, email, password, verification_token) VALUES (?, ?, ?, ?)",
-      [username, email, hashedPassword, verificationToken]
+      [username, email, hashedPassword, verificationToken],
     );
     // Send verification email
     await nodemailerSendVerificationEmail(email, verificationToken);
