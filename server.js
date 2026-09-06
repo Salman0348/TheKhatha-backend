@@ -33,6 +33,12 @@ const {
   updateAccountController,
   deleteAccountController,
 } = require("./controllers/account.controller.js");
+const {
+  getMessages,
+  sendMessage,
+  getUnreadCount,
+  markChatAsRead,
+} = require("./controllers/chat.controller.js");
 
 require("dotenv").config();
 
@@ -145,6 +151,23 @@ app.get("/api/v1/account", authinticateToken, getAccountController);
 app.post("/api/v1/account", authinticateToken, createAccountController);
 app.put("/api/v1/account", authinticateToken, updateAccountController);
 app.delete("/api/v1/account", authinticateToken, deleteAccountController);
+
+// chats routes
+app.get("/api/v1/groups/:groupId/messages", authinticateToken, getMessages);
+
+app.post("/api/v1/groups/:groupId/messages", authinticateToken, sendMessage);
+
+app.get(
+  "/api/v1/groups/:groupId/messages/unread",
+  authinticateToken,
+  getUnreadCount,
+);
+
+app.patch(
+  "/api/v1/groups/:groupId/messages/read",
+  authinticateToken,
+  markChatAsRead,
+);
 
 // *************************************************************************** //
 

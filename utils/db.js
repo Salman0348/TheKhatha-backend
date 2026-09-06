@@ -15,7 +15,15 @@ db.connect((err) => {
   if (err) {
     console.log("db connection failed", err);
   } else {
-    console.log("connetected to database");
+    console.log("connected to database");
+
+    db.query("SET time_zone = '+00:00'", (err) => {
+      if (err) {
+        console.log("Failed to set DB timezone:", err);
+      } else {
+        console.log("Database session timezone set to UTC");
+      }
+    });
   }
 });
 
