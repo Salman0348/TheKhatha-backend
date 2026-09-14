@@ -43,7 +43,7 @@ const signin = (req, res) => {
             userPicCloudinayUrl: user.avatar_url,
           },
           process.env.JWT_ACCESS_TOKEN_SECRET_KEY,
-          { expiresIn: "15m" }
+          { expiresIn: "15m" },
         );
         const refreshToken = jwt.sign(
           {
@@ -53,19 +53,22 @@ const signin = (req, res) => {
             userPicCloudinayUrl: user.avatar_url,
           },
           process.env.JWT_REFRESH_TOKEN_SECRET_KEY,
-          { expiresIn: "7d" }
+          { expiresIn: "7d" },
         );
+
+        const isProduction = process.env.NODE_ENV === "production";
 
         res.cookie("accessToken", accessToken, {
           httpOnly: true,
-          // secure: true,
-          sameSite: "Strict",
+          secure: isProduction,
+          sameSite: isProduction ? "none" : "lax",
           maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days in milliseconds
         });
+
         res.cookie("refreshToken", refreshToken, {
           httpOnly: true,
-          // secure: true,
-          sameSite: "Strict",
+          secure: isProduction,
+          sameSite: isProduction ? "none" : "lax",
           maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days in milliseconds
         });
 
