@@ -14,7 +14,6 @@ const removeCloudinaryImage = async (req, res, next) => {
     try {
       const publicId = extractPublicId(oldImgUrl);
 
-      // Don't use a callback with await
       const result = await cloudinary.uploader.destroy(publicId);
 
       console.log("Cloudinary delete result:", result);

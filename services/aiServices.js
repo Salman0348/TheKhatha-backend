@@ -4,7 +4,7 @@ const axios = require("axios");
 async function getCategory(description) {
   try {
     const response = await axios.post(
-      "http://127.0.0.1:8000/predict-category",
+      `${process.env.AI_SERVICE_URL}/predict-category`,
       {
         description: description,
       },
@@ -20,7 +20,7 @@ async function getCategory(description) {
 async function getExpenseForecastService(forecastFeatures) {
   try {
     const response = await axios.post(
-      "http://127.0.0.1:8000/predict-forecast",
+      `${process.env.AI_SERVICE_URL}/predict-forecast`,
       forecastFeatures,
     );
     return response.data;

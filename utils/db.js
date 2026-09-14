@@ -1,6 +1,7 @@
 const mysql = require("mysql2");
 const util = require("util");
 require("dotenv").config();
+const fs = require("fs");
 
 const db = mysql.createConnection({
   host: process.env.DB_HOST,
@@ -9,6 +10,9 @@ const db = mysql.createConnection({
   password: process.env.DB_PASSWORD,
   database: process.env.DATABASE,
   timezone: "Z",
+  ssl: {
+    ca: fs.readFileSync("./configs/ca.pem"),
+  },
 });
 
 db.connect((err) => {
