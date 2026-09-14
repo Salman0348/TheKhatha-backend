@@ -59,10 +59,12 @@ const authinticateToken = async (req, res, next) => {
                     process.env.JWT_ACCESS_TOKEN_SECRET_KEY,
                     { expiresIn: "15m" },
                   );
-                  res.cookie("accessToken", newAccessToken, {
+                  const isProduction = process.env.NODE_ENV === "production";
+
+                  res.cookie("accessToken", accessToken, {
                     httpOnly: true,
-                    // secure: true,
-                    sameSite: "Strict",
+                    secure: isProduction,
+                    sameSite: isProduction ? "none" : "lax",
                     maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days in milliseconds
                   });
                   req.user = {

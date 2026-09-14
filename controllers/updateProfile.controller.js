@@ -104,7 +104,7 @@ const updateProfile = async (req, res) => {
             : userNewImgUrl || user.userPicCloudinayUrl,
         },
         process.env.JWT_ACCESS_TOKEN_SECRET_KEY,
-        { expiresIn: "15m" }
+        { expiresIn: "15m" },
       );
 
       const refreshToken = jwt.sign(
@@ -117,21 +117,25 @@ const updateProfile = async (req, res) => {
             : userNewImgUrl || user.userPicCloudinayUrl,
         },
         process.env.JWT_REFRESH_TOKEN_SECRET_KEY,
-        { expiresIn: "7d" }
+        { expiresIn: "7d" },
       );
+
+      const isProduction = process.env.NODE_ENV === "production";
 
       res.cookie("accessToken", accessToken, {
         httpOnly: true,
-        // secure: true,
-        sameSite: "Strict",
+        secure: isProduction,
+        sameSite: isProduction ? "none" : "lax",
         maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days in milliseconds
       });
+
       res.cookie("refreshToken", refreshToken, {
         httpOnly: true,
-        // secure: true,
-        sameSite: "Strict",
+        secure: isProduction,
+        sameSite: isProduction ? "none" : "lax",
         maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days in milliseconds
       });
+
       return res.status(200).json({ message: "Profile updated successfully" });
     } catch (error) {
       return res.status(500).json({
