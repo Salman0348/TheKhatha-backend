@@ -87,18 +87,26 @@ const signup = async (req, res) => {
       [username, email, hashedPassword, verificationToken],
     );
     // Send verification email
+    console.log("1. About to send verification email");
+
     await nodemailerSendVerificationEmail(email, verificationToken);
+
+    console.log("2. Verification email sent");
+
     res.status(200).json({
       message: "Verification email sent successfully",
     });
   } catch (error) {
-    if (error.message === "Failed to send verification email") {
-      return res.status(500).json({
-        error: "EMAIL_ERROR",
-        message: "Failed to send verification email",
-      });
-    }
-    res.status(500).json({ message: error.message || "Internal server error" });
+    console.error("SIGNUP ERROR:");
+    console.error(error);
+    console.error("Error code:", error.code);
+    console.error("Error command:", error.command);
+    console.error("Error response:", error.response);
+
+    return res.status(500).json({
+      error: "SIGNUP_ERROR",
+      message: error.message || "Internal server error",
+    });
   }
 };
 
