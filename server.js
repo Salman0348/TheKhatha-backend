@@ -169,42 +169,6 @@ app.patch(
   markChatAsRead,
 );
 
-// testing
-app.get("/api/test-smtp", async (req, res) => {
-  const nodemailer = require("nodemailer");
-
-  try {
-    const transporter = nodemailer.createTransport({
-      host: "smtp.gmail.com",
-      port: 587,
-      secure: false,
-      connectionTimeout: 10000,
-      greetingTimeout: 10000,
-      socketTimeout: 15000,
-      auth: {
-        user: process.env.EMAIL,
-        pass: process.env.EMAIL_APP_PASS,
-      },
-    });
-
-    await transporter.verify();
-
-    res.json({
-      success: true,
-      message: "SMTP connection successful",
-    });
-  } catch (error) {
-    console.error("SMTP TEST ERROR:", error);
-
-    res.status(500).json({
-      success: false,
-      message: error.message,
-      code: error.code,
-      command: error.command,
-    });
-  }
-});
-
 // *************************************************************************** //
 
 // Error handling middleware

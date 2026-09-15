@@ -40,7 +40,7 @@ const signup = async (req, res) => {
      * ----------------------------------------
      * Use pending_user + email verification.
      */
-    if (process.env.NODE_ENV !== "production") {
+    if (process.env.NODE_ENV == "development") {
       // Check if user already exists in pending_user
       const pendingUser = await dbQuery(
         "SELECT * FROM pending_user WHERE email = ?",
@@ -125,7 +125,7 @@ const signup = async (req, res) => {
       [username, email, hashedPassword],
     );
 
-    return res.status(201).json({
+    return res.status(200).json({
       message: "Account created successfully",
     });
   } catch (error) {
