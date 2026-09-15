@@ -68,6 +68,21 @@ const getExpenseAnalyticsController = async (req, res) => {
 
     const requestedEnd = new Date(endDateTime);
 
+    console.log("===== ANALYTICS TIME DEBUG =====");
+    console.log("startDateTime received:", startDateTime);
+    console.log("endDateTime received:", endDateTime);
+
+    console.log("requestedEnd ISO:", requestedEnd.toISOString());
+    console.log("server now ISO:", now.toISOString());
+
+    console.log("requestedEnd timestamp:", requestedEnd.getTime());
+
+    console.log("server now timestamp:", now.getTime());
+
+    console.log("requestedEnd > now:", requestedEnd > now);
+
+    console.log("================================");
+
     if (requestedEnd > now) {
       return res.status(400).json({
         error: "Analytics cannot go beyond the current date and time",
