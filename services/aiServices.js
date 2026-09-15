@@ -1,14 +1,16 @@
 const axios = require("axios");
 
+const baseURL =
+  process.env.NODE_ENV === "production"
+    ? process.env.AI_SERVICE_URL
+    : "http://127.0.0.1:8000";
+
 // getting category by hitting the python server
 async function getCategory(description) {
   try {
-    const response = await axios.post(
-      `${process.env.AI_SERVICE_URL}/predict-category`,
-      {
-        description: description,
-      },
-    );
+    const response = await axios.post(`${baseURL}/predict-category`, {
+      description: description,
+    });
     return response.data;
   } catch (error) {
     console.error("Error fetching category:", error);
@@ -20,7 +22,7 @@ async function getCategory(description) {
 async function getExpenseForecastService(forecastFeatures) {
   try {
     const response = await axios.post(
-      `${process.env.AI_SERVICE_URL}/predict-forecast`,
+      `${baseURL}/predict-forecast`,
       forecastFeatures,
     );
     return response.data;
